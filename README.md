@@ -19,6 +19,27 @@
 > It starts baseline-clean, so you can measure a healthy system first and then introduce bottlenecks on purpose.
 > That makes it easier to learn k6, JMeter, and Gatling without guessing what changed.
 
+## Baseline Target
+
+<table>
+  <tr>
+    <td><strong>Goal</strong></td>
+    <td>Measure the app in a known-good state before you add any bottlenecks.</td>
+  </tr>
+  <tr>
+    <td><strong>Starting point</strong></td>
+    <td>Smoke runs pass, list pages stay responsive, and error rate stays near zero on the seeded data set.</td>
+  </tr>
+  <tr>
+    <td><strong>Compare later</strong></td>
+    <td>Use the same workload, same data size, and same endpoints when you test future changes.</td>
+  </tr>
+  <tr>
+    <td><strong>What to watch</strong></td>
+    <td>p50, p90, p95, p99, throughput, error rate, CPU, memory, and database latency.</td>
+  </tr>
+</table>
+
 ## Overview
 
 ProjectTrace models the workflow below:
