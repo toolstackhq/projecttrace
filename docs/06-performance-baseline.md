@@ -25,6 +25,17 @@ For ProjectTrace, a sensible starting baseline is:
 - error rate stays near zero
 - the same dataset size is used each time
 
+More concrete starter targets for the seeded local stack are:
+
+| Action | Starter target |
+| --- | --- |
+| Login | p95 under 1 second |
+| Dashboard summary | p95 under 750 ms |
+| List bugs | p95 under 750 ms |
+| Create bug | p95 under 1 second |
+| View requirement detail | p95 under 1 second |
+| Create test run | p95 under 1 second |
+
 If your business asks for a baseline, they usually mean:
 
 1. run the same workload against a known-good build

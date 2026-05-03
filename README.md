@@ -40,6 +40,27 @@
   </tr>
 </table>
 
+### ProjectTrace Starter Targets
+
+These are practical starting targets for the seeded local stack. Treat them as the first baseline
+you measure, then adjust them with business input and real production-like data.
+
+| Action | Starter target |
+| --- | --- |
+| Login | p95 under 1 second |
+| Dashboard summary | p95 under 750 ms |
+| List bugs | p95 under 750 ms |
+| Create bug | p95 under 1 second |
+| View requirement detail | p95 under 1 second |
+| Create test run | p95 under 1 second |
+
+If the business later says "baseline" in a review, this is the kind of thing they usually mean:
+
+- run the same workload against a known-good build
+- measure the current numbers
+- keep the same dataset size
+- compare future builds against those numbers
+
 ## Overview
 
 ProjectTrace models the workflow below:
