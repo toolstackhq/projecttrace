@@ -1,99 +1,76 @@
 # ProjectTrace
 
-ProjectTrace is a full-stack QA and development tracking tool built for learning serious performance testing with k6 and JMeter.
+<div align="left">
+  <a href="https://github.com/toolstackhq/projecttrace">
+    <img alt="ProjectTrace" src="https://img.shields.io/badge/ProjectTrace-enterprise%20QA%20traceability-111827?style=for-the-badge">
+  </a>
+  <a href="https://toolstackhq.github.io/projecttrace/">
+    <img alt="Docs" src="https://img.shields.io/badge/docs-vitepress-0F766E?style=for-the-badge">
+  </a>
+  <a href="https://toolstackhq.github.io/projecttrace/03-api-guide">
+    <img alt="OpenAPI" src="https://img.shields.io/badge/api-openapi%20%2F%20swagger-2563EB?style=for-the-badge">
+  </a>
+  <a href="https://github.com/toolstackhq/projecttrace/blob/main/LICENSE">
+    <img alt="License" src="https://img.shields.io/badge/license-MIT-4B5563?style=for-the-badge">
+  </a>
+</div>
 
-It models a realistic workflow:
+ProjectTrace is a full-stack QA traceability app for learning real performance testing on a CRUD web application.
+It is intentionally baseline-clean so you can use it to learn k6, JMeter, and Gatling before you introduce bottlenecks.
+
+## Overview
+
+ProjectTrace models the workflow below:
+
 `Project -> Epic -> Feature -> Requirement -> Test Case -> Test Run -> Bug`
 
-## Architecture
+It includes:
 
-- Backend: FastAPI + SQLAlchemy + Alembic
-- Frontend: React + Vite + Tailwind CSS
-- Database: PostgreSQL
-- Runtime: Docker Compose
-- Documentation: VitePress-ready GitHub Pages docs
-- Performance tooling: k6 scripts, JMeter plans, and Gatling simulations under `tests/performance`
+- projects, epics, features, requirements, test cases, test runs, bugs, comments, activity logs, and users
+- REST APIs for CRUD, search, filtering, pagination, and linking entities
+- FastAPI OpenAPI docs for programmatic access
+- Docker Compose for local development and performance runs
+- VitePress docs for learning the app and the perf tools
 
-## API Docs
+## At A Glance
 
-The backend exposes FastAPI OpenAPI docs out of the box:
-
-- Swagger UI: <a href="http://localhost:8000/docs">http://localhost:8000/docs</a>
-- ReDoc: <a href="http://localhost:8000/redoc">http://localhost:8000/redoc</a>
-- OpenAPI JSON: <a href="http://localhost:8000/openapi.json">http://localhost:8000/openapi.json</a>
-
-Use the same REST endpoints for curl, API tests, k6, and JMeter.
+| Area | Stack |
+| --- | --- |
+| Backend | FastAPI, SQLAlchemy, Alembic, PostgreSQL |
+| Frontend | React, Vite, Tailwind CSS |
+| Perf tools | k6, JMeter, Gatling |
+| Docs | VitePress |
+| Runtime | Docker Compose |
 
 ## Quick Start
 
-1. Copy `.env.example` to `.env` if you want to run locally.
+1. Copy the example env file if you want to run outside Docker:
+
+```bash
+cp .env.example .env
+```
+
 2. Start the stack:
 
 ```bash
 docker compose up --build
 ```
 
-3. Open the UI at <a href="http://localhost:5173">http://localhost:5173</a>
-4. Open the API docs at <a href="http://localhost:8000/docs">http://localhost:8000/docs</a>
+3. Open the UI:
 
-## Documentation Site
+<a href="http://localhost:5173">http://localhost:5173</a>
 
-The docs site lives in `docs/` and is ready for GitHub Pages deployment.
-It is organized around four learning tracks:
+4. Open the API docs:
 
-- ProjectTrace
-- JMeter
-- k6
-- Gatling
+<a href="http://localhost:8000/docs">http://localhost:8000/docs</a>
 
-```bash
-cd docs
-npm install
-npm run dev
-```
+5. Open the docs site:
 
-## Authentication
+<a href="http://localhost:5173/projecttrace/">http://localhost:5173/projecttrace/</a>
 
-- If the database is empty, the login screen will let you create the first admin account.
-- If you seeded the database, the default seeded admin is `admin@projecttrace.dev`.
-- The default seeded password is `ProjectTrace123!` unless you override `SEED_USER_PASSWORD`.
-- The frontend stores a JWT access token locally and sends it as a bearer token on API requests.
+## Running Locally
 
-## Migrations
-
-Run the baseline migration:
-
-```bash
-make migrate
-```
-
-## Seed Data
-
-Generate realistic sample data:
-
-```bash
-make seed
-```
-
-The seed script creates one admin user and uses the configured `SEED_USER_PASSWORD` for seeded accounts.
-
-## Reset Database
-
-Drop and recreate the schema:
-
-```bash
-make reset-db
-```
-
-## Run the Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## Run the Backend
+### Backend
 
 ```bash
 cd backend
@@ -102,151 +79,201 @@ alembic upgrade head
 uvicorn app.main:app --reload
 ```
 
-## k6 Tests
+### Frontend
 
-Scripts live in `tests/performance/k6`.
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-See `tests/performance/k6/README.md` and `docs/04-k6-guide.md`.
+### Docs
 
-No local k6 install is required for the normal workflow. The Docker report target runs k6 in Docker.
-That target uses k6's built-in web dashboard export to generate `reports/k6/latest/index.html`.
-Use the smoke command for a quick check and the load command when you want the run to stay under
-load for longer.
+```bash
+cd docs
+npm install
+npm run dev
+```
 
-Run a k6 plan from CLI with:
+## Database
+
+Run migrations:
+
+```bash
+make migrate
+```
+
+Seed realistic data:
+
+```bash
+make seed
+```
+
+Reset the schema:
+
+```bash
+make reset-db
+```
+
+The seed data includes:
+
+- 25 users
+- 10 projects
+- 30 epics
+- 100 features
+- 500 requirements
+- 2,000 test cases
+- 10,000 test runs
+- 5,000 bugs
+- 20,000 comments
+
+## Authentication
+
+- If the database is empty, the first user can bootstrap an admin account.
+- Seeded login:
+  - email: `admin@projecttrace.dev`
+  - password: `ProjectTrace123!`
+- The frontend stores a JWT access token and sends it as a bearer token.
+- Admins can provision users and delete data.
+- Editors can create and update data but cannot delete it.
+
+## API Docs
+
+ProjectTrace exposes the FastAPI OpenAPI surface directly:
+
+- Swagger UI: <a href="http://localhost:8000/docs">http://localhost:8000/docs</a>
+- ReDoc: <a href="http://localhost:8000/redoc">http://localhost:8000/redoc</a>
+- OpenAPI JSON: <a href="http://localhost:8000/openapi.json">http://localhost:8000/openapi.json</a>
+
+Use these endpoints for:
+
+- curl
+- API tests
+- k6
+- JMeter
+- Gatling
+
+## Documentation
+
+The docs site is organized into four learning tracks:
+
+- ProjectTrace
+- JMeter
+- k6
+- Gatling
+
+Start here:
+
+- <a href="https://toolstackhq.github.io/projecttrace/">ProjectTrace docs home</a>
+- <a href="https://toolstackhq.github.io/projecttrace/05-jmeter-guide">JMeter guide</a>
+- <a href="https://toolstackhq.github.io/projecttrace/04-k6-guide">k6 guide</a>
+- <a href="https://toolstackhq.github.io/projecttrace/10-gatling-guide">Gatling guide</a>
+
+## Performance Testing
+
+The performance material lives under `tests/performance`.
+
+### k6
+
+Run a quick smoke check:
 
 ```bash
 make k6-report PLAN=smoke-test.js
 ```
 
-Longer steady load run:
+Run a longer steady-load test:
 
 ```bash
 make k6-load-report
 ```
 
-To open the HTML report after the run:
+Open the HTML report:
 
 ```bash
 make k6-report-open PLAN=smoke-test.js
 ```
 
-Useful plan files:
+### JMeter
 
-- `tests/performance/k6/smoke-test.js`
-- `tests/performance/k6/baseline-load-test.js`
-- `tests/performance/k6/volume-test.js`
-- `tests/performance/k6/crud-workflow-test.js`
-- `tests/performance/k6/search-filter-test.js`
-- `tests/performance/k6/spike-test.js`
-- `tests/performance/k6/stress-test.js`
-- `tests/performance/k6/soak-test-template.js`
-
-## JMeter Tests
-
-See `tests/performance/jmeter/README.md` and `docs/05-jmeter-guide.md`.
-
-No local JMeter install is required. The report target runs JMeter in Docker.
-
-Run a JMeter plan from CLI with:
-
-```bash
-docker compose --profile perf run --rm jmeter -n -t tests/performance/jmeter/plans/smoke-test.jmx -l reports/jmeter/latest/results.jtl -e -o reports/jmeter/latest
-```
-
-Run and generate a report instantly with:
+Run a quick smoke check:
 
 ```bash
 make jmeter-report PLAN=smoke-test.jmx
 ```
 
-Longer steady load run:
+Run a longer steady-load test:
 
 ```bash
 make jmeter-load-report
 ```
 
-That target first ensures the canonical perf login exists in the database, then runs JMeter in
-Docker and writes the HTML report.
-
-To open the HTML report after the run:
+Open the HTML report:
 
 ```bash
 make jmeter-report-open PLAN=smoke-test.jmx
 ```
 
-Useful plan files:
+### Gatling
 
-- `tests/performance/jmeter/plans/smoke-test.jmx`
-- `tests/performance/jmeter/plans/baseline-load-test.jmx`
-- `tests/performance/jmeter/plans/volume-test.jmx`
-- `tests/performance/jmeter/plans/crud-workflow-test.jmx`
-- `tests/performance/jmeter/plans/search-filter-test.jmx`
-- `tests/performance/jmeter/plans/spike-test.jmx`
-- `tests/performance/jmeter/plans/stress-test.jmx`
-- `tests/performance/jmeter/plans/soak-test-template.jmx`
-
-## Gatling Tests
-
-Gatling simulations live in `tests/performance/gatling`.
-
-You will need to install the local JavaScript dependencies once:
-
-```bash
-cd tests/performance/gatling
-npm install
-```
-
-Run the smoke simulation from the folder with:
-
-```bash
-npm run smoke
-```
-
-Run the longer load simulation with:
-
-```bash
-npm run load
-```
-
-The repo also exposes root Make targets:
+Run a quick smoke check:
 
 ```bash
 make gatling-report GATLING_PLAN=smoke-test.gatling.js
-make gatling-load-report
-make gatling-report-open GATLING_PLAN=smoke-test.gatling.js
-make gatling-load-report-open
 ```
 
-The Make targets fetch a JWT from the seeded admin user before running Gatling, so the scripts
-stay authenticated without a manual login step.
+Run a longer steady-load test:
 
-The generated HTML report lives under `tests/performance/gatling/target/gatling/.../index.html`.
+```bash
+make gatling-load-report
+```
 
-Useful simulation files:
+Open the HTML report:
 
-- `tests/performance/gatling/src/smoke-test.gatling.js`
-- `tests/performance/gatling/src/baseline-load-test.gatling.js`
-- `tests/performance/gatling/src/volume-test.gatling.js`
-- `tests/performance/gatling/src/crud-workflow-test.gatling.js`
-- `tests/performance/gatling/src/search-filter-test.gatling.js`
-- `tests/performance/gatling/src/spike-test.gatling.js`
-- `tests/performance/gatling/src/stress-test.gatling.js`
-- `tests/performance/gatling/src/soak-test-template.gatling.js`
+```bash
+make gatling-report-open GATLING_PLAN=smoke-test.gatling.js
+```
+
+### Workload Types
+
+- Smoke: prove the app is wired correctly.
+- Load: hold expected traffic steady.
+- Volume: expose data-size problems.
+- Spike: test sudden bursts.
+- Stress: push past expected capacity.
+- Soak: hold load for a long time.
+
+## Project Structure
+
+- `backend/` FastAPI app, SQLAlchemy models, Alembic migrations, and backend tests
+- `frontend/` React + Vite app
+- `docs/` VitePress learning site
+- `tests/performance/` k6, JMeter, and Gatling assets
+- `docker-compose.yml` local stack for app and test tooling
+- `Makefile` one-command developer and perf workflow
 
 ## Why This App Exists
 
-ProjectTrace is intentionally baseline-clean. It gives you:
+ProjectTrace is designed to be a realistic learning target for performance testing.
+It gives you:
 
-- dense list/detail pages
-- searchable data sets
-- linked entities and many-to-many relationships
-- summary endpoints and activity logs
-- a dataset large enough to reveal bottlenecks later
+- normal CRUD traffic
+- search and filter flows
+- detail pages with linked entities
+- activity logs and summary endpoints
+- a data model large enough to make performance problems visible later
 
 ## Next Learning Steps
 
-1. Add password reset and account lifecycle management.
-2. Add charts and deeper analytics.
-3. Add GitHub PR linking using the placeholder design.
-4. Introduce bottlenecks intentionally and measure them with k6 and JMeter.
+1. Learn the app workflow first.
+2. Run the smoke tests.
+3. Run steady load tests.
+4. Read the HTML reports and compare percentiles.
+5. Introduce bottlenecks one at a time and measure the impact.
+
+## Contributing
+
+The repo is set up for incremental improvements. Keep changes simple, documented, and easy to measure.
+
+## License
+
+MIT. See the repository <a href="https://github.com/toolstackhq/projecttrace/blob/main/LICENSE">LICENSE</a>.
