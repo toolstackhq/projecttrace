@@ -42,6 +42,37 @@ It includes:
 | Docs | VitePress |
 | Runtime | Docker Compose |
 
+## Performance Toolkit
+
+The logos below are stored in `assets/performance-tools/` and used here to make the README feel
+more like a product page than a raw notes file.
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/performance-tools/k6.png" alt="k6 logo" width="120">
+      <br>
+      <strong>k6</strong>
+      <br>
+      Script-first performance testing
+    </td>
+    <td align="center">
+      <img src="assets/performance-tools/jmeter.png" alt="JMeter logo" width="120">
+      <br>
+      <strong>JMeter</strong>
+      <br>
+      GUI-first load testing
+    </td>
+    <td align="center">
+      <img src="assets/performance-tools/gatling.png" alt="Gatling logo" width="120">
+      <br>
+      <strong>Gatling</strong>
+      <br>
+      Code-first user journey testing
+    </td>
+  </tr>
+</table>
+
 ## Quick Start
 
 1. Copy the example env file if you want to run outside Docker:
