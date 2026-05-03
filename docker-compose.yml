@@ -1,0 +1,96 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: projecttrace
+      POSTGRES_PASSWORD: projecttrace
+      POSTGRES_DB: projecttrace
+    ports:
+      - "5432:5432"
+    volumes:
+      - projecttrace-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U projecttrace -d projecttrace"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://projecttrace:projecttrace@db:5432/projecttrace
+      JWT_SECRET_KEY: projecttrace-development-secret-key-projecttrace-development-secret-key
+      CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+      AUTO_CREATE_TABLES: "false"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health').read()\""]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000/api
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+    command: npm run dev -- --host 0.0.0.0
+
+  jmeter:
+    image: justb4/jmeter:latest
+    working_dir: /workspace
+    user: "${UID:-1000}:${GID:-1000}"
+    entrypoint:
+      - sh
+      - /workspace/tests/performance/jmeter/run-jmeter.sh
+    environment:
+      JMETER_BASE_HOST: backend
+      JMETER_BASE_PORT: "8000"
+      JMETER_PROTOCOL: http
+      JMETER_SEED_USER_EMAIL: admin@projecttrace.dev
+      JMETER_SEED_USER_PASSWORD: ProjectTrace123!
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - ./:/workspace
+    profiles:
+      - perf
+
+  k6:
+    image: grafana/k6:latest
+    working_dir: /workspace
+    user: "${UID:-1000}:${GID:-1000}"
+    entrypoint:
+      - sh
+      - /workspace/tests/performance/k6/run-k6.sh
+    environment:
+      K6_BASE_URL: http://backend:8000/api
+      K6_SERVICE_BASE_URL: http://backend:8000
+      K6_REPORT_DIR: reports/k6/latest
+      K6_WEB_DASHBOARD: "true"
+      K6_WEB_DASHBOARD_PORT: "-1"
+      K6_WEB_DASHBOARD_PERIOD: 250ms
+      K6_WEB_DASHBOARD_EXPORT: reports/k6/latest/index.html
+      K6_SEED_USER_EMAIL: admin@projecttrace.dev
+      K6_SEED_USER_PASSWORD: ProjectTrace123!
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - ./:/workspace
+    profiles:
+      - perf
+
+volumes:
+  projecttrace-db:
