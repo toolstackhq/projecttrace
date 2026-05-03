@@ -44,9 +44,6 @@ It includes:
 
 ## Performance Toolkit
 
-The logos below are stored in `assets/performance-tools/` and used here to make the README feel
-more like a product page than a raw notes file.
-
 <table>
   <tr>
     <td align="center">
