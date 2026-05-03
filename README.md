@@ -15,8 +15,9 @@
   </a>
 </div>
 
-ProjectTrace is a full-stack QA traceability app for learning real performance testing on a CRUD web application.
-It is intentionally baseline-clean so you can use it to learn k6, JMeter, and Gatling before you introduce bottlenecks.
+> ProjectTrace is a full-stack QA traceability app for learning real performance testing on a CRUD web application.
+> It starts baseline-clean, so you can measure a healthy system first and then introduce bottlenecks on purpose.
+> That makes it easier to learn k6, JMeter, and Gatling without guessing what changed.
 
 ## Overview
 

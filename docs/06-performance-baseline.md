@@ -4,6 +4,35 @@
 
 Create a clean baseline before any bottlenecks are introduced.
 
+## What Baseline Means
+
+A baseline is the agreed starting point for performance.
+
+In a real team, business owners usually define it as a set of expectations such as:
+
+- how long key pages should take
+- how many users or requests the app should handle
+- what error rate is acceptable
+- what "good enough" looks like for the current release
+
+It is not a single universal number. It is a measured reference point.
+
+For ProjectTrace, a sensible starting baseline is:
+
+- smoke checks pass reliably
+- dashboard and list endpoints stay fast under moderate concurrency
+- p95 latency stays stable enough to compare later runs against it
+- error rate stays near zero
+- the same dataset size is used each time
+
+If your business asks for a baseline, they usually mean:
+
+1. run the same workload against a known-good build
+2. record the current p50, p90, p95, p99, throughput, and errors
+3. treat those numbers as the comparison point for future testing
+
+That is how you know whether a later change made the app better or worse.
+
 ## Recommended Runs
 
 - `k6` smoke test
@@ -42,4 +71,3 @@ When a future bottleneck is introduced:
 3. compare percentiles, throughput, and errors
 4. inspect the backend and database metrics
 5. record the result in the template
-
