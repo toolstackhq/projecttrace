@@ -3,6 +3,7 @@ import { http, jmesPath, status } from "@gatling.io/http";
 import { apiUrl, firstIdStep, httpProtocol, withAuth } from "./common.js";
 
 export default simulation((setUp) => {
+  // CRUD workflow: a smaller but realistic read/write journey across linked entities.
   const scn = scenario("CRUD Workflow")
     .exec(firstIdStep("Project seed", "/projects?page_size=1", "projectId"))
     .exec(firstIdStep("Requirement seed", "/requirements?page_size=1", "requirementId"))
@@ -79,5 +80,6 @@ export default simulation((setUp) => {
       ),
     );
 
+  // 2 users per second for 180 seconds keeps the write flow moving without turning it into a spike test.
   setUp(scn.injectOpen(constantUsersPerSec(2).during(180))).protocols(httpProtocol);
 });

@@ -88,6 +88,7 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
+      <!-- 5 threads, 60 second ramp-up, 8 loops, focused on create/update/link/delete CRUD flow. -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <stringProp name="ThreadGroup.num_threads">5</stringProp>
@@ -156,6 +157,25 @@ def json = new JsonSlurper().parseText(prev.getResponseDataAsString())
 vars.put("authToken", json.access_token.toString())
 ]]></stringProp>
           </JSR223PostProcessor>
+          <hashTree />
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert Login" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script"><![CDATA[
+if (prev.getResponseCode() != '200') {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Login returned ' + prev.getResponseCode())
+}
+if (prev.getTime() > 1000) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Login took ' + prev.getTime() + 'ms, expected <= 1000ms')
+}
+]]></stringProp>
+          </JSR223Assertion>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Users list" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -190,6 +210,7 @@ if (item != null && item.id != null) {
 }
 ]]></stringProp>
           </JSR223PostProcessor>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Projects list" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -224,6 +245,7 @@ if (item != null && item.id != null) {
 }
 ]]></stringProp>
           </JSR223PostProcessor>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Features list" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -258,6 +280,7 @@ if (item != null && item.id != null) {
 }
 ]]></stringProp>
           </JSR223PostProcessor>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Requirements list" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -292,6 +315,7 @@ if (item != null && item.id != null) {
 }
 ]]></stringProp>
           </JSR223PostProcessor>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Test cases list" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -326,6 +350,7 @@ if (item != null && item.id != null) {
 }
 ]]></stringProp>
           </JSR223PostProcessor>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create requirement" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -365,6 +390,7 @@ if (json.id != null) {
 }
 ]]></stringProp>
           </JSR223PostProcessor>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Update requirement" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -467,6 +493,7 @@ if (json.id != null) {
 }
 ]]></stringProp>
           </JSR223PostProcessor>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Update test case" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -531,6 +558,7 @@ if (json.id != null) {
 }
 ]]></stringProp>
           </JSR223PostProcessor>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Update bug" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">

@@ -3,6 +3,7 @@ import { http, status } from "@gatling.io/http";
 import { apiUrl, firstIdStep, httpProtocol, withAuth } from "./common.js";
 
 export default simulation((setUp) => {
+  // Volume: larger page sizes and detail reads over the seeded data set.
   const scn = scenario("Volume")
     .exec(firstIdStep("Project seed", "/projects?page_size=1", "projectId"))
     .exec(firstIdStep("Requirement seed", "/requirements?page_size=1", "requirementId"))
@@ -17,5 +18,6 @@ export default simulation((setUp) => {
     .exec(withAuth(http("Test case detail").get((session) => apiUrl(`/test-cases/${session.get("testCaseId")}`)).check(status().is(200))))
     .exec(withAuth(http("Bug detail").get((session) => apiUrl(`/bugs/${session.get("bugId")}`)).check(status().is(200))));
 
+  // 3 users per second for 5 minutes keeps the pressure on list and detail endpoints.
   setUp(scn.injectOpen(constantUsersPerSec(3).during(300))).protocols(httpProtocol);
 });

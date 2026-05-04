@@ -51,6 +51,7 @@ export function login() {
   );
   check(response, {
     "login succeeded": (r) => r.status === 200,
+    "login fast": (r) => r.timings.duration < 1000,
   });
   return response.json("access_token");
 }

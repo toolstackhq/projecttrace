@@ -3,6 +3,7 @@ import http from "k6/http";
 import { apiUrl, authHeaders, login } from "./common.js";
 
 export const options = {
+  // Search/filter: keep the traffic steady while the app scans indexed fields.
   vus: 5,
   duration: "3m",
   thresholds: {
@@ -12,6 +13,7 @@ export const options = {
 };
 
 export function setup() {
+  // One login token is enough because the test is about query behavior.
   return { token: login() };
 }
 

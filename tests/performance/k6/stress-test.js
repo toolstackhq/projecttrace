@@ -3,6 +3,7 @@ import http from "k6/http";
 import { apiUrl, authHeaders, login } from "./common.js";
 
 export const options = {
+  // Stress: steady growth beyond the expected limit to find the breaking point.
   stages: [
     { duration: "2m", target: 20 },
     { duration: "6m", target: 20 },
@@ -16,6 +17,7 @@ export const options = {
 };
 
 export function setup() {
+  // The run should push the app, not spend time repeatedly authenticating.
   return { token: login() };
 }
 

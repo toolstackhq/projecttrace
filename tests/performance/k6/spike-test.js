@@ -3,6 +3,7 @@ import http from "k6/http";
 import { apiUrl, authHeaders, login } from "./common.js";
 
 export const options = {
+  // Spike: small baseline, sudden jump, quick drop, then stop.
   stages: [
     { duration: "1m", target: 5 },
     { duration: "1m", target: 80 },
@@ -16,6 +17,7 @@ export const options = {
 };
 
 export function setup() {
+  // One shared token keeps the spike focused on app behavior, not auth churn.
   return { token: login() };
 }
 

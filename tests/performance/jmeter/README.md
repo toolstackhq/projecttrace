@@ -43,14 +43,16 @@ does not depend on whatever user record is already in the database.
 
 The plans live in `plans/`:
 
-- `smoke-test.jmx`
-- `baseline-load-test.jmx`
-- `volume-test.jmx`
-- `crud-workflow-test.jmx`
-- `search-filter-test.jmx`
-- `spike-test.jmx`
-- `stress-test.jmx`
-- `soak-test-template.jmx`
+| Test | ProjectTrace plan | GitHub | Netflix-style example |
+| --- | --- | --- | --- |
+| Smoke | `smoke-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/smoke-test.jmx">open</a> | Sign in, open home, confirm browse/search still works. |
+| Load | `baseline-load-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/baseline-load-test.jmx">open</a> | A normal evening of browsing rows of titles and opening details. |
+| Volume | `volume-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/volume-test.jmx">open</a> | A huge catalog where big reads and searches still need to stay fast. |
+| CRUD workflow | `crud-workflow-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/crud-workflow-test.jmx">open</a> | A user updates watch metadata, comments, and linked items in sequence. |
+| Search and filter | `search-filter-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/search-filter-test.jmx">open</a> | Filtering by genre, language, or region on a large catalog. |
+| Spike | `spike-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/spike-test.jmx">open</a> | A trailer drops and traffic jumps sharply for a short burst. |
+| Stress | `stress-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/stress-test.jmx">open</a> | Launch-night traffic pushes the service past its normal limit. |
+| Soak | `soak-test-template.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/soak-test-template.jmx">open</a> | Overnight browsing and watching to catch drift or leaks. |
 
 Generate them again after editing the generator:
 

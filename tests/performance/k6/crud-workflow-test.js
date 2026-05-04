@@ -3,6 +3,7 @@ import http from "k6/http";
 import { apiUrl, authHeaders, firstItemId, getJson, login, postJson, putJson, deleteJson } from "./common.js";
 
 export const options = {
+  // CRUD workflow: a small group repeatedly creates, updates, links, and deletes records.
   vus: 5,
   iterations: 10,
   thresholds: {
@@ -12,6 +13,7 @@ export const options = {
 };
 
 export function setup() {
+  // Seed IDs are fetched once so each iteration can spend time on real CRUD actions.
   const token = login();
   return {
     token,
@@ -25,6 +27,7 @@ export function setup() {
 export default function (data) {
   const headers = authHeaders(data.token);
 
+  // Create a bug, then update it, then add a comment.
   const createBug = postJson(
     "/bugs",
     {
@@ -59,6 +62,7 @@ export default function (data) {
   );
   check(comment, { "comment created": (r) => r.status === 201 });
 
+  // Relationship endpoints should stay fast and reliable under write traffic.
   const linkRequirement = http.post(apiUrl(`/requirements/${data.requirementId}/test-cases/${data.testCaseId}`), null, headers);
   check(linkRequirement, { "requirement linked to test case": (r) => r.status === 204 });
 

@@ -88,6 +88,7 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
+      <!-- 1 thread, 1 loop, and one pass through the core smoke checks. -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
@@ -156,6 +157,25 @@ def json = new JsonSlurper().parseText(prev.getResponseDataAsString())
 vars.put("authToken", json.access_token.toString())
 ]]></stringProp>
           </JSR223PostProcessor>
+          <hashTree />
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert Login" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script"><![CDATA[
+if (prev.getResponseCode() != '200') {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Login returned ' + prev.getResponseCode())
+}
+if (prev.getTime() > 1000) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Login took ' + prev.getTime() + 'ms, expected <= 1000ms')
+}
+]]></stringProp>
+          </JSR223Assertion>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Health" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -175,6 +195,24 @@ vars.put("authToken", json.access_token.toString())
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert Health" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script"><![CDATA[
+if (prev.getResponseCode() != '200') {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Health returned ' + prev.getResponseCode())
+}
+if (prev.getTime() > 500) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Health took ' + prev.getTime() + 'ms, expected <= 500ms')
+}
+]]></stringProp>
+          </JSR223Assertion>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Summary" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -194,6 +232,24 @@ vars.put("authToken", json.access_token.toString())
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert Summary" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script"><![CDATA[
+if (prev.getResponseCode() != '200') {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Summary returned ' + prev.getResponseCode())
+}
+if (prev.getTime() > 750) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Summary took ' + prev.getTime() + 'ms, expected <= 750ms')
+}
+]]></stringProp>
+          </JSR223Assertion>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Bugs list" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -213,6 +269,24 @@ vars.put("authToken", json.access_token.toString())
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert Bugs list" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script"><![CDATA[
+if (prev.getResponseCode() != '200') {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Bugs list returned ' + prev.getResponseCode())
+}
+if (prev.getTime() > 750) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Bugs list took ' + prev.getTime() + 'ms, expected <= 750ms')
+}
+]]></stringProp>
+          </JSR223Assertion>
+          <hashTree />
         </hashTree>
       </hashTree>
     </hashTree>

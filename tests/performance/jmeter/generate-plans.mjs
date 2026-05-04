@@ -57,6 +57,11 @@ function formatXml(xml) {
       continue;
     }
 
+    if (token.startsWith("<!--")) {
+      lines.push(`${"  ".repeat(indent)}${token}`);
+      continue;
+    }
+
     if (token.startsWith("<stringProp") || token.startsWith("<boolProp")) {
       lines.push(`${"  ".repeat(indent)}${token}`);
       continue;
@@ -141,10 +146,41 @@ function jsr223PostProcessor(name, script) {
   ].join("");
 }
 
-function sampler({ name, method, path, body = null, postProcessor = null }) {
+function jsr223Assertion(name, maxMillis) {
+  const script = `
+if (prev.getResponseCode() != '200') {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('${name} returned ' + prev.getResponseCode())
+}
+if (prev.getTime() > ${maxMillis}) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('${name} took ' + prev.getTime() + 'ms, expected <= ${maxMillis}ms')
+}
+`;
+  return [
+    `<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="${esc(`Assert ${name}`)}" enabled="true">`,
+    stringProp("cacheKey", "true"),
+    stringProp("filename", ""),
+    stringProp("parameters", ""),
+    boolProp("resetInterpreter", false),
+    stringProp("scriptLanguage", "groovy"),
+    `<stringProp name="script"><![CDATA[${script}]]></stringProp>`,
+    `</JSR223Assertion>`,
+  ].join("");
+}
+
+function sampler({ name, method, path, body = null, postProcessor = null, assertion = null }) {
   const argumentsBlock = body
     ? `<elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"><elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp>${stringProp("Argument.value", body)}${stringProp("Argument.metadata", "=")}</elementProp></collectionProp></elementProp>`
     : `<elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>`;
+
+  const children = [];
+  if (postProcessor) {
+    children.push(postProcessor, `<hashTree />`);
+  }
+  if (assertion) {
+    children.push(assertion, `<hashTree />`);
+  }
 
   return [
     `<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${esc(name)}" enabled="true">`,
@@ -162,7 +198,7 @@ function sampler({ name, method, path, body = null, postProcessor = null }) {
     boolProp("HTTPSampler.embedded_url_re", false),
     body ? boolProp("HTTPSampler.postBodyRaw", true) : boolProp("HTTPSampler.postBodyRaw", false),
     `</HTTPSamplerProxy>`,
-    `<hashTree>${postProcessor ? postProcessor : ""}</hashTree>`,
+    `<hashTree>${children.join("")}</hashTree>`,
   ].join("");
 }
 
@@ -179,6 +215,7 @@ vars.put("authToken", json.access_token.toString())
     path: "/api/auth/login",
     body,
     postProcessor: jsr223PostProcessor("Capture auth token", script),
+    assertion: jsr223Assertion("Login", 1000),
   });
 }
 
@@ -215,7 +252,7 @@ function tg({ threads, ramp, loops, duration, forever = false }) {
   ].join("");
 }
 
-function planXml({ title, description, variables, threadGroup, steps }) {
+function planXml({ title, description, variables, threadGroup, comment, steps }) {
   return [
     `<?xml version="1.0" encoding="UTF-8"?>`,
     `<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">`,
@@ -229,6 +266,7 @@ function planXml({ title, description, variables, threadGroup, steps }) {
     stringProp("TestPlan.user_define_classpath", ""),
     `</TestPlan>`,
     `<hashTree>`,
+    comment ? `<!-- ${esc(comment)} -->` : "",
     threadGroup,
     `<hashTree>`,
     httpRequestDefaults(),
@@ -267,30 +305,33 @@ const scenarios = [
     file: "smoke-test.jmx",
     title: "ProjectTrace Smoke Test",
     description: "Smoke test that checks health, summary, and bugs list after login.",
+    comment: "1 thread, 1 loop, and one pass through the core smoke checks.",
     threadGroup: tg({ threads: 1, ramp: 1, loops: 1 }),
     steps: [
-      sampler({ name: "Health", method: "GET", path: "/health" }),
-      sampler({ name: "Summary", method: "GET", path: "/api/stats/summary" }),
-      sampler({ name: "Bugs list", method: "GET", path: "/api/bugs?page_size=5" }),
+      sampler({ name: "Health", method: "GET", path: "/health", assertion: jsr223Assertion("Health", 500) }),
+      sampler({ name: "Summary", method: "GET", path: "/api/stats/summary", assertion: jsr223Assertion("Summary", 750) }),
+      sampler({ name: "Bugs list", method: "GET", path: "/api/bugs?page_size=5", assertion: jsr223Assertion("Bugs list", 750) }),
     ],
   },
   {
     file: "baseline-load-test.jmx",
     title: "ProjectTrace Baseline Load Test",
     description: "Baseline load covering dashboard, activity, bugs, requirements, and test cases.",
+    comment: "10 threads, 120 second ramp-up, 10 loops, then ramp down for steady baseline load.",
     threadGroup: tg({ threads: 10, ramp: 120, loops: 10 }),
     steps: [
-      sampler({ name: "Summary", method: "GET", path: "/api/stats/summary" }),
-      sampler({ name: "Activity", method: "GET", path: "/api/activity?page_size=10" }),
-      sampler({ name: "Bugs list", method: "GET", path: "/api/bugs?page_size=20&sort=updated_at&order=desc" }),
-      sampler({ name: "Requirements list", method: "GET", path: "/api/requirements?page_size=20&sort=updated_at&order=desc" }),
-      sampler({ name: "Test cases list", method: "GET", path: "/api/test-cases?page_size=20&sort=created_at&order=desc" }),
+      sampler({ name: "Summary", method: "GET", path: "/api/stats/summary", assertion: jsr223Assertion("Summary", 750) }),
+      sampler({ name: "Activity", method: "GET", path: "/api/activity?page_size=10", assertion: jsr223Assertion("Activity", 1000) }),
+      sampler({ name: "Bugs list", method: "GET", path: "/api/bugs?page_size=20&sort=updated_at&order=desc", assertion: jsr223Assertion("Bugs list", 750) }),
+      sampler({ name: "Requirements list", method: "GET", path: "/api/requirements?page_size=20&sort=updated_at&order=desc", assertion: jsr223Assertion("Requirements list", 750) }),
+      sampler({ name: "Test cases list", method: "GET", path: "/api/test-cases?page_size=20&sort=created_at&order=desc", assertion: jsr223Assertion("Test cases list", 750) }),
     ],
   },
   {
     file: "volume-test.jmx",
     title: "ProjectTrace Volume Test",
     description: "Large page sizes and detail reads across seeded data to surface volume-related issues.",
+    comment: "15 threads, 120 second ramp-up, 8 loops, with large-page reads and detail views.",
     threadGroup: tg({ threads: 15, ramp: 120, loops: 8 }),
     steps: [
       extractFirstIdSampler("Projects list", "/api/projects?page_size=100&sort=updated_at&order=desc", "projectId"),
@@ -307,6 +348,7 @@ const scenarios = [
     file: "crud-workflow-test.jmx",
     title: "ProjectTrace CRUD Workflow Test",
     description: "End-to-end CRUD workflow covering bug, requirement, test case, comment, linking, and test run actions.",
+    comment: "5 threads, 60 second ramp-up, 8 loops, focused on create/update/link/delete CRUD flow.",
     threadGroup: tg({ threads: 5, ramp: 60, loops: 8 }),
     steps: [
       extractFirstIdSampler("Users list", "/api/users?page_size=5", "userId"),
@@ -437,6 +479,7 @@ if (json.id != null) {
     file: "search-filter-test.jmx",
     title: "ProjectTrace Search and Filter Test",
     description: "Search and filter coverage for bugs, requirements, test cases, and projects.",
+    comment: "5 threads, 45 second ramp-up, 12 loops, aimed at search-heavy list endpoints.",
     threadGroup: tg({ threads: 5, ramp: 45, loops: 12 }),
     steps: [
       sampler({ name: "Search bugs", method: "GET", path: "/api/bugs?search=bug&page_size=20&severity=HIGH&status=OPEN" }),
@@ -449,6 +492,7 @@ if (json.id != null) {
     file: "spike-test.jmx",
     title: "ProjectTrace Spike Test",
     description: "Short spike against dashboard and list endpoints.",
+    comment: "40 threads with a quick ramp and drop to simulate a sudden traffic burst.",
     threadGroup: tg({ threads: 40, ramp: 5, loops: 3 }),
     steps: [
       sampler({ name: "Summary", method: "GET", path: "/api/stats/summary" }),
@@ -461,6 +505,7 @@ if (json.id != null) {
     file: "stress-test.jmx",
     title: "ProjectTrace Stress Test",
     description: "Higher concurrency stress on dashboard and list endpoints.",
+    comment: "20 threads, 60 second ramp-up, 25 loops, then heavier pressure to find the breaking point.",
     threadGroup: tg({ threads: 20, ramp: 60, loops: 25 }),
     steps: [
       sampler({ name: "Summary", method: "GET", path: "/api/stats/summary" }),
@@ -474,6 +519,7 @@ if (json.id != null) {
     file: "soak-test-template.jmx",
     title: "ProjectTrace Soak Test Template",
     description: "Long-running soak template for the dashboard and list workflow.",
+    comment: "10 threads, 120 second ramp-up, and 1800 seconds of steady traffic for drift checks.",
     threadGroup: tg({ threads: 10, ramp: 120, loops: 1, duration: 1800, forever: true }),
     steps: [
       sampler({ name: "Summary", method: "GET", path: "/api/stats/summary" }),
@@ -491,6 +537,7 @@ for (const scenario of scenarios) {
     description: scenario.description,
     variables,
     threadGroup: scenario.threadGroup,
+    comment: scenario.comment,
     steps: scenario.steps,
   });
   writeFileSync(join(plansDir, scenario.file), formatXml(xml), "utf8");

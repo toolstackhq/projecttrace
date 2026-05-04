@@ -3,6 +3,7 @@ import http from "k6/http";
 import { apiUrl, authHeaders, firstItemId, getJson, login } from "./common.js";
 
 export const options = {
+  // Volume: bigger pages and detail reads over a larger seeded data set.
   stages: [
     { duration: "2m", target: 15 },
     { duration: "8m", target: 15 },
@@ -15,6 +16,7 @@ export const options = {
 };
 
 export function setup() {
+  // Grab a login token and a few seeded IDs once, before the load starts.
   const token = login();
   return {
     token,
@@ -28,6 +30,7 @@ export function setup() {
 export default function (data) {
   const headers = authHeaders(data.token);
 
+  // Larger list pages to surface slow paging and filtering behavior.
   const projects = http.get(apiUrl("/projects?page_size=100&sort=updated_at&order=desc"), headers);
   check(projects, { "projects page ok": (r) => r.status === 200 });
 
@@ -40,6 +43,7 @@ export default function (data) {
   const bugs = http.get(apiUrl("/bugs?page_size=100&sort=updated_at&order=desc"), headers);
   check(bugs, { "bugs page ok": (r) => r.status === 200 });
 
+  // Detail reads often expose missing indexes or inefficient joins.
   const projectDetail = http.get(apiUrl(`/projects/${data.projectId}`), headers);
   check(projectDetail, { "project detail ok": (r) => r.status === 200 });
 

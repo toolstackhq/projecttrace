@@ -14,6 +14,22 @@ If you are new to JMeter, read this page in this order:
 5. How to run a longer load test
 6. How to read the HTML report
 
+## ProjectTrace Starter Targets
+
+These are the app-specific starting targets used by the smoke and baseline plans:
+
+| Action | Target |
+| --- | --- |
+| Login | p95 under 1 second |
+| Dashboard summary | p95 under 750 ms |
+| List bugs | p95 under 750 ms |
+| Create bug | p95 under 1 second |
+| View requirement detail | p95 under 1 second |
+| Create test run | p95 under 1 second |
+
+The JMeter plans assert response code 200 and enforce these timing goals so the test itself fails
+when the baseline is missed.
+
 ### 1. What JMeter Is And Why People Still Use It
 
 JMeter is a GUI-first performance testing tool. People still use it because it is easy to
@@ -127,14 +143,19 @@ Recommended layout:
 
 ProjectTrace ships runnable JMeter plans in:
 
-- `tests/performance/jmeter/plans/smoke-test.jmx`
-- `tests/performance/jmeter/plans/baseline-load-test.jmx`
-- `tests/performance/jmeter/plans/volume-test.jmx`
-- `tests/performance/jmeter/plans/crud-workflow-test.jmx`
-- `tests/performance/jmeter/plans/search-filter-test.jmx`
-- `tests/performance/jmeter/plans/spike-test.jmx`
-- `tests/performance/jmeter/plans/stress-test.jmx`
-- `tests/performance/jmeter/plans/soak-test-template.jmx`
+| File | GitHub | What to notice |
+| --- | --- | --- |
+| `smoke-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/smoke-test.jmx">open</a> | 1 thread, 1 loop, and the core smoke assertions. |
+| `baseline-load-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/baseline-load-test.jmx">open</a> | Ramp-up, steady hold, and the baseline timing checks. |
+| `volume-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/volume-test.jmx">open</a> | Larger pages and detail reads that surface scale issues. |
+| `crud-workflow-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/crud-workflow-test.jmx">open</a> | Create, update, link, comment, and delete flow. |
+| `search-filter-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/search-filter-test.jmx">open</a> | Search-heavy reads against filtered lists. |
+| `spike-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/spike-test.jmx">open</a> | Sudden traffic burst and recovery. |
+| `stress-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/stress-test.jmx">open</a> | Higher pressure to see where the app bends. |
+| `soak-test-template.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/soak-test-template.jmx">open</a> | Long steady run for drift and leak detection. |
+
+The generated plans also include XML comments that call out thread counts, ramp-up time, loops,
+and long-run duration near the top of each plan.
 
 ## Thread Groups
 

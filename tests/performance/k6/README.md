@@ -29,16 +29,16 @@ The tests authenticate with the seeded admin account by default:
 
 ## Workloads
 
-| Test | ProjectTrace script | Netflix-style example |
+| Test | ProjectTrace script | GitHub | Netflix-style example |
 | --- | --- | --- |
-| Smoke | `smoke-test.js` | Sign in, open home, confirm browse/search still works. |
-| Load | `baseline-load-test.js` | A normal evening of browsing rows of titles and opening details. |
-| Volume | `volume-test.js` | A huge catalog where big reads and searches still need to stay fast. |
-| CRUD workflow | `crud-workflow-test.js` | A user updates watch metadata, comments, and linked items in sequence. |
-| Search and filter | `search-filter-test.js` | Filtering by genre, language, or region on a large catalog. |
-| Spike | `spike-test.js` | A trailer drops and traffic jumps sharply for a short burst. |
-| Stress | `stress-test.js` | Launch-night traffic pushes the service past its normal limit. |
-| Soak | `soak-test-template.js` | Overnight browsing and watching to catch drift or leaks. |
+| Smoke | `smoke-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/smoke-test.js">open</a> | Sign in, open home, confirm browse/search still works. |
+| Load | `baseline-load-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/baseline-load-test.js">open</a> | A normal evening of browsing rows of titles and opening details. |
+| Volume | `volume-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/volume-test.js">open</a> | A huge catalog where big reads and searches still need to stay fast. |
+| CRUD workflow | `crud-workflow-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/crud-workflow-test.js">open</a> | A user updates watch metadata, comments, and linked items in sequence. |
+| Search and filter | `search-filter-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/search-filter-test.js">open</a> | Filtering by genre, language, or region on a large catalog. |
+| Spike | `spike-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/spike-test.js">open</a> | A trailer drops and traffic jumps sharply for a short burst. |
+| Stress | `stress-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/stress-test.js">open</a> | Launch-night traffic pushes the service past its normal limit. |
+| Soak | `soak-test-template.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/soak-test-template.js">open</a> | Overnight browsing and watching to catch drift or leaks. |
 
 ## Which Command To Use
 

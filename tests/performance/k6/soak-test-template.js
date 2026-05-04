@@ -3,6 +3,7 @@ import http from "k6/http";
 import { apiUrl, authHeaders, login } from "./common.js";
 
 export const options = {
+  // Soak: long steady load to catch drift, leaks, and slow degradation.
   stages: [
     { duration: "10m", target: 10 },
     { duration: "20m", target: 10 },
@@ -15,6 +16,7 @@ export const options = {
 };
 
 export function setup() {
+  // The token stays stable so the long run measures app stability over time.
   return { token: login() };
 }
 

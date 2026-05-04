@@ -14,6 +14,21 @@ If you are new to Gatling, read this page in this order:
 5. How to run a longer load test
 6. How open and closed workload models differ
 
+## ProjectTrace Starter Targets
+
+These are the app-specific starting targets used by the smoke and baseline simulations:
+
+| Action | Target |
+| --- | --- |
+| Login | p95 under 1 second |
+| Dashboard summary | p95 under 750 ms |
+| List bugs | p95 under 750 ms |
+| Create bug | p95 under 1 second |
+| View requirement detail | p95 under 1 second |
+| Create test run | p95 under 1 second |
+
+The smoke simulation checks these directly so the run fails when the baseline is missed.
+
 ## What Gatling Is
 
 Gatling is a code-first performance testing tool.
@@ -132,14 +147,16 @@ If you see `constantUsersPerSec`, `atOnceUsers`, or `rampUsers`, you are looking
 
 The repo includes these simulations:
 
-- `smoke-test.gatling.js`
-- `baseline-load-test.gatling.js`
-- `volume-test.gatling.js`
-- `crud-workflow-test.gatling.js`
-- `search-filter-test.gatling.js`
-- `spike-test.gatling.js`
-- `stress-test.gatling.js`
-- `soak-test-template.gatling.js`
+| File | GitHub | What to notice |
+| --- | --- | --- |
+| `smoke-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/smoke-test.gatling.js">open</a> | 1 user hitting health, summary, and bugs. |
+| `baseline-load-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/baseline-load-test.gatling.js">open</a> | Constant arrival rate for the baseline load window. |
+| `volume-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/volume-test.gatling.js">open</a> | Larger pages and detail reads across seeded data. |
+| `crud-workflow-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/crud-workflow-test.gatling.js">open</a> | Real CRUD flow with create, update, link, and delete. |
+| `search-filter-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/search-filter-test.gatling.js">open</a> | Search-heavy list traffic at a steady rate. |
+| `spike-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/spike-test.gatling.js">open</a> | Fast ramp up, burst, and drop back down. |
+| `stress-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/stress-test.gatling.js">open</a> | Push beyond normal capacity to see where it breaks. |
+| `soak-test-template.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/soak-test-template.gatling.js">open</a> | Long steady arrival rate for drift detection. |
 
 ## Run Commands
 

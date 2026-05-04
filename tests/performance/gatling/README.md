@@ -25,16 +25,16 @@ GATLING_ACCESS_TOKEN=... npm run smoke
 
 ## Simulations
 
-| Test | ProjectTrace simulation | Netflix-style example |
-| --- | --- | --- |
-| Smoke | `smoke-test.gatling.js` | Sign in, open the home page, and confirm browse/search still works. |
-| Load | `baseline-load-test.gatling.js` | A normal evening of browsing rows of titles and opening details. |
-| Volume | `volume-test.gatling.js` | A huge catalog where large reads and searches still need to stay fast. |
-| CRUD workflow | `crud-workflow-test.gatling.js` | A user updates metadata, comments, and linked items in sequence. |
-| Search and filter | `search-filter-test.gatling.js` | Filtering by genre, language, or region on a large catalog. |
-| Spike | `spike-test.gatling.js` | A trailer drops and traffic jumps sharply for a short burst. |
-| Stress | `stress-test.gatling.js` | Launch-night traffic pushes the service past its normal limit. |
-| Soak | `soak-test-template.gatling.js` | Overnight browsing and watching to catch drift or leaks. |
+| Test | ProjectTrace simulation | GitHub | Netflix-style example |
+| --- | --- | --- | --- |
+| Smoke | `smoke-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/smoke-test.gatling.js">open</a> | Sign in, open the home page, and confirm browse/search still works. |
+| Load | `baseline-load-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/baseline-load-test.gatling.js">open</a> | A normal evening of browsing rows of titles and opening details. |
+| Volume | `volume-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/volume-test.gatling.js">open</a> | A huge catalog where large reads and searches still need to stay fast. |
+| CRUD workflow | `crud-workflow-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/crud-workflow-test.gatling.js">open</a> | A user updates metadata, comments, and linked items in sequence. |
+| Search and filter | `search-filter-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/search-filter-test.gatling.js">open</a> | Filtering by genre, language, or region on a large catalog. |
+| Spike | `spike-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/spike-test.gatling.js">open</a> | A trailer drops and traffic jumps sharply for a short burst. |
+| Stress | `stress-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/stress-test.gatling.js">open</a> | Launch-night traffic pushes the service past its normal limit. |
+| Soak | `soak-test-template.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/soak-test-template.gatling.js">open</a> | Overnight browsing and watching to catch drift or leaks. |
 
 ## Which Command To Use
 

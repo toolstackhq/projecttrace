@@ -24,6 +24,7 @@ export default defineConfig({
             { text: "Getting Started", link: "/01-setup" },
             { text: "Architecture", link: "/02-architecture" },
             { text: "API Guide", link: "/03-api-guide" },
+            { text: "Manual Performance Checklist", link: "/11-manual-performance-checklist" },
             { text: "Users and Auth", link: "/workflows/users" },
             { text: "Projects", link: "/workflows/projects" },
             { text: "Planning Workflow", link: "/workflows/planning" },

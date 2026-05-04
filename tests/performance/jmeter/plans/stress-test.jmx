@@ -88,6 +88,7 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
+      <!-- 20 threads, 60 second ramp-up, 25 loops, then heavier pressure to find the breaking point. -->
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <stringProp name="ThreadGroup.num_threads">20</stringProp>
@@ -156,6 +157,25 @@ def json = new JsonSlurper().parseText(prev.getResponseDataAsString())
 vars.put("authToken", json.access_token.toString())
 ]]></stringProp>
           </JSR223PostProcessor>
+          <hashTree />
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert Login" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script"><![CDATA[
+if (prev.getResponseCode() != '200') {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Login returned ' + prev.getResponseCode())
+}
+if (prev.getTime() > 1000) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Login took ' + prev.getTime() + 'ms, expected <= 1000ms')
+}
+]]></stringProp>
+          </JSR223Assertion>
+          <hashTree />
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Summary" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">

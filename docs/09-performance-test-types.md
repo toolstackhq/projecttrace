@@ -100,36 +100,42 @@ If errors rise suddenly, you probably hit a resource limit or a bad failure path
 
 ### k6
 
-- `tests/performance/k6/smoke-test.js`
-- `tests/performance/k6/baseline-load-test.js`
-- `tests/performance/k6/volume-test.js`
-- `tests/performance/k6/crud-workflow-test.js`
-- `tests/performance/k6/search-filter-test.js`
-- `tests/performance/k6/spike-test.js`
-- `tests/performance/k6/stress-test.js`
-- `tests/performance/k6/soak-test-template.js`
+| File | GitHub | What it shows |
+| --- | --- | --- |
+| `smoke-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/smoke-test.js">open</a> | 1 VU, 1 iteration, and the core smoke checks. |
+| `baseline-load-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/baseline-load-test.js">open</a> | Ramp, hold, and ramp-down stages for baseline load. |
+| `volume-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/volume-test.js">open</a> | Large page sizes and detail reads over the seeded data. |
+| `crud-workflow-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/crud-workflow-test.js">open</a> | Fixed iterations for create, update, link, comment, and delete. |
+| `search-filter-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/search-filter-test.js">open</a> | A steady run against search-heavy list endpoints. |
+| `spike-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/spike-test.js">open</a> | A sudden jump up and back down in traffic. |
+| `stress-test.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/stress-test.js">open</a> | Traffic beyond the normal limit. |
+| `soak-test-template.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/k6/soak-test-template.js">open</a> | Long steady traffic to catch drift and leaks. |
 
 ### JMeter
 
-- `tests/performance/jmeter/plans/smoke-test.jmx`
-- `tests/performance/jmeter/plans/baseline-load-test.jmx`
-- `tests/performance/jmeter/plans/volume-test.jmx`
-- `tests/performance/jmeter/plans/crud-workflow-test.jmx`
-- `tests/performance/jmeter/plans/search-filter-test.jmx`
-- `tests/performance/jmeter/plans/spike-test.jmx`
-- `tests/performance/jmeter/plans/stress-test.jmx`
-- `tests/performance/jmeter/plans/soak-test-template.jmx`
+| File | GitHub | What it shows |
+| --- | --- | --- |
+| `smoke-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/smoke-test.jmx">open</a> | 1 thread, 1 loop, and the core smoke assertions. |
+| `baseline-load-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/baseline-load-test.jmx">open</a> | Ramp-up, steady hold, and baseline timing checks. |
+| `volume-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/volume-test.jmx">open</a> | Larger pages and detail reads that expose scale issues. |
+| `crud-workflow-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/crud-workflow-test.jmx">open</a> | Create, update, link, comment, and delete flow. |
+| `search-filter-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/search-filter-test.jmx">open</a> | Search-heavy reads against filtered lists. |
+| `spike-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/spike-test.jmx">open</a> | Sudden traffic burst and recovery. |
+| `stress-test.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/stress-test.jmx">open</a> | Higher pressure to see where the app bends. |
+| `soak-test-template.jmx` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/jmeter/plans/soak-test-template.jmx">open</a> | Long steady run for drift and leak detection. |
 
 ### Gatling
 
-- `tests/performance/gatling/src/smoke-test.gatling.js`
-- `tests/performance/gatling/src/baseline-load-test.gatling.js`
-- `tests/performance/gatling/src/volume-test.gatling.js`
-- `tests/performance/gatling/src/crud-workflow-test.gatling.js`
-- `tests/performance/gatling/src/search-filter-test.gatling.js`
-- `tests/performance/gatling/src/spike-test.gatling.js`
-- `tests/performance/gatling/src/stress-test.gatling.js`
-- `tests/performance/gatling/src/soak-test-template.gatling.js`
+| File | GitHub | What it shows |
+| --- | --- | --- |
+| `smoke-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/smoke-test.gatling.js">open</a> | 1 user, health, summary, and bugs. |
+| `baseline-load-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/baseline-load-test.gatling.js">open</a> | Constant arrival rate for the baseline window. |
+| `volume-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/volume-test.gatling.js">open</a> | Larger pages and detail reads over seeded data. |
+| `crud-workflow-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/crud-workflow-test.gatling.js">open</a> | Real CRUD flow with create, update, link, and delete. |
+| `search-filter-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/search-filter-test.gatling.js">open</a> | Search-heavy list traffic at a steady rate. |
+| `spike-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/spike-test.gatling.js">open</a> | Fast ramp up, burst, and drop back down. |
+| `stress-test.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/stress-test.gatling.js">open</a> | Push beyond normal capacity to see where it breaks. |
+| `soak-test-template.gatling.js` | <a href="https://github.com/toolstackhq/projecttrace/blob/main/tests/performance/gatling/src/soak-test-template.gatling.js">open</a> | Long steady arrival rate for drift detection. |
 
 ## Rule Of Thumb
 
@@ -139,3 +145,9 @@ If errors rise suddenly, you probably hit a resource limit or a bad failure path
 - Spike: prove the app can survive sudden bursts.
 - Stress: prove the app fails gracefully.
 - Soak: prove the app stays healthy over time.
+
+## Manual Checklist
+
+If you want to understand the app before you automate it, use the
+<a href="/11-manual-performance-checklist">Manual Performance Checklist</a>.
+It maps the human walk-through to the exact k6, JMeter, and Gatling files.
